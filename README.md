@@ -1,16 +1,37 @@
-# React + Vite
+# АгроМаркет (React)
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Учебный проект: каталог фермерских продуктов на React + Vite. Данные приходят с json-server.
 
-Currently, two official plugins are available:
+## Запуск
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+1. В папке `agromarket`: `npx --yes json-server@0.17.4 --watch db.json --port 3001`
+2. В папке `agromarket-react`: `npm install`, затем `npm run dev`
+3. Открыть http://localhost:5173
 
-## React Compiler
+## Лабораторная 4 — вёрстка
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Box model карточки (часть 1)
+- content: ≈ 255 px (на экране 1280 px), padding: 16 px с каждой стороны, border: 1 px, margin: 0
+- итоговая ширина карточки на экране: ≈ 289 px
+- с `box-sizing: border-box` итоговая ширина **не изменилась**: у карточки нет заданной `width`, она автоматически растягивается на всю колонку сетки. Разница видна, когда ширина задана явно: при `width: 300px` без `border-box` карточка заняла бы 300 + 32 (padding) + 2 (border) = 334 px, а с `border-box` — ровно 300 px.
+- в дереве элементов `<div>` совсем немного (`#root` и контейнер сетки карточек), шапка, каталог и подвал распознаются по тегам `<header>`, `<main>`, `<footer>`.
 
-## Expanding the Oxlint configuration
+### repeat(4, 1fr) на узком экране (часть 4)
+Число колонок остаётся равным четырём при любой ширине окна, поэтому на ~500 px карточки сжимаются до узких столбиков: названия переносятся по буквам и слогам, кнопки и цены не помещаются, страница может получить горизонтальную прокрутку.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+### auto-fit vs auto-fill (часть 4)
+При `auto-fit` пустые колонки схлопываются и 1–2 найденные карточки растягиваются на всю ширину сетки, а при `auto-fill` пустые колонки сохраняются и карточки остаются обычной ширины. Выбран `auto-fit`.
+
+### Адаптивность (часть 5)
+
+| Ширина | Колонок | Где «Доставка» | Шапка |
+|--------|---------|----------------|-------|
+| 375    | 1       | под каталогом  | столбик |
+| 768    | 3       | под каталогом  | ряд |
+| 1280   | 3       | справа от каталога | ряд |
+
+### Форма заявки (часть 6)
+Поля `email`, `tel`, `number` (min=10), `date`, атрибут `required`. Браузер сам блокирует отправку пустой формы, email без «@» и объём меньше 10 кг. Неверные поля подсвечиваются красной рамкой через `:user-invalid`.
+
+### Скриншоты
+Папка `screenshots/`: `375.png` и `1280.png`.

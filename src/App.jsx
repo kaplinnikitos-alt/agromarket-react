@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
+import Header from './components/Header';
+import Footer from './components/Footer';
 import ProductCard from './components/ProductCard';
+import ContactForm from './components/ContactForm';
 
 const API_URL = 'http://localhost:3001/products';
 
@@ -42,50 +45,50 @@ function App() {
 
   return (
     <>
-      <header className="header">
-        <a className="logo" href="#">
-          <span className="logo-mark">АМ</span>
-          АгроМаркет
-        </a>
-        <p className="cart">
-          Корзина
-          <span id="cart-count">{cartCount}</span>
-        </p>
-      </header>
+      <Header cartCount={cartCount} />
 
-      <section className="hero">
-        <h1>Продукты от фермеров Алматинской области</h1>
-        <p>Собрали утром, привезли днём. Доставка по городу в день заказа.</p>
-      </section>
-
-      <main>
-        <section className="catalog">
-          <h2>Каталог</h2>
-
-          <input
-            className="search"
-            type="text"
-            placeholder="Поиск товара..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+      <main className="page">
+        <section id="catalog" className="catalog">
+          <div className="catalog-toolbar">
+            <h2>Каталог</h2>
+            <input
+              type="search"
+              placeholder="Поиск товара..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
 
           {loading && <p className="status">Загрузка...</p>}
           {error && <p className="error">{error}</p>}
 
           {!loading && !error && (
-            <div className="catalog-grid">
+            <div className="product-grid">
               {filteredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} onAdd={handleAddToCart} />
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onAdd={handleAddToCart}
+                  featured={product.id === 1}
+                />
               ))}
             </div>
           )}
         </section>
+
+        <aside id="delivery" className="sidebar">
+          <h3>Доставка</h3>
+          <ul>
+            <li>Астана — на следующий день</li>
+            <li>Акмолинская область — 2–3 дня</li>
+            <li>Бесплатно от 20 000 тг</li>
+          </ul>
+        </aside>
+
+        <ContactForm />
       </main>
 
-      <footer className="footer">
-        <p>Лабораторная работа №3 · Fullstack-разработка</p>
-      </footer>
+      <Footer />
     </>
   );
 }
