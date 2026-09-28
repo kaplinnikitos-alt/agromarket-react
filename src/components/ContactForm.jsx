@@ -1,8 +1,39 @@
+import { useState } from 'react';
+
+const API_URL = 'http://localhost:3000/api';
+
 function ContactForm() {
-  function handleSubmit(e) {
+  const [sending, setSending] = useState(false);
+
+  async function handleSubmit(e) {
     e.preventDefault(); // не перезагружать страницу
-    alert('Заявка отправлена! Мы свяжемся с вами.');
-    e.target.reset(); // очистить поля
+    const form = e.target;
+
+    // Собираем все поля формы в объект { name: ..., email: ..., ... }
+    const data = Object.fromEntries(new FormData(form));
+
+    setSending(true);
+    try {
+      const res = await fetch(`${API_URL}/orders`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      const result = await res.json();
+
+      if (!res.ok) { // статус не 2xx (например, 400)
+        alert('Ошибка: ' + result.error);
+        return;
+      }
+
+      alert(`Заявка №${result.id} принята!`);
+      form.reset();
+    } catch (err) { // сервер выключен или недоступен
+      console.error(err);
+      alert('Сервер недоступен. Запущен ли agromarket-server?');
+    } finally {
+      setSending(false);
+    }
   }
 
   return (
@@ -21,8 +52,8 @@ function ContactForm() {
         <input id="phone" name="phone" type="tel"
                placeholder="+7 7XX XXX XX XX" />
 
-        <label htmlFor="volume">Объём заказа, кг</label>
-        <input id="volume" name="volume" type="number" min="10" required />
+        <label htmlFor="quantity">Объём заказа, кг</label>
+        <input id="quantity" name="quantity" type="number" min="10" required />
 
         <label htmlFor="date">Желаемая дата доставки</label>
         <input id="date" name="date" type="date" />
@@ -30,7 +61,9 @@ function ContactForm() {
         <label htmlFor="comment">Комментарий</label>
         <textarea id="comment" name="comment" rows="4" />
 
-        <button type="submit">Отправить заявку</button>
+        <button type="submit" disabled={sending}>
+          {sending ? 'Отправка…' : 'Отправить заявку'}
+        </button>
       </form>
     </section>
   );

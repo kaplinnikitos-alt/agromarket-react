@@ -4,7 +4,7 @@ import Footer from './components/Footer';
 import ProductCard from './components/ProductCard';
 import ContactForm from './components/ContactForm';
 
-const API_URL = 'http://localhost:3001/products';
+const API_URL = 'http://localhost:3000/api';
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -16,7 +16,7 @@ function App() {
   useEffect(() => {
     async function loadProducts() {
       try {
-        const response = await fetch(API_URL);
+        const response = await fetch(`${API_URL}/products`);
 
         if (!response.ok) {
           throw new Error('Сервер ответил со статусом ' + response.status);
@@ -27,7 +27,7 @@ function App() {
         setLoading(false);
       } catch (err) {
         console.error(err);
-        setError('Не удалось загрузить товары. Проверьте, запущен ли json-server на порту 3001.');
+        setError('Не удалось загрузить товары. Проверьте, запущен ли agromarket-server на порту 3000.');
         setLoading(false);
       }
     }

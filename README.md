@@ -1,12 +1,20 @@
 # АгроМаркет (React)
 
-Учебный проект: каталог фермерских продуктов на React + Vite. Данные приходят с json-server.
+Учебный проект: каталог фермерских продуктов на React + Vite. Данные приходят с собственного Express-сервера (репозиторий `agromarket-server`), заявки из формы отправляются туда же методом POST.
 
 ## Запуск
 
-1. В папке `agromarket`: `npx --yes json-server@0.17.4 --watch db.json --port 3001`
+1. В папке `agromarket-server`: `npm install`, затем `npm run dev` (http://localhost:3000)
 2. В папке `agromarket-react`: `npm install`, затем `npm run dev`
 3. Открыть http://localhost:5173
+
+> json-server (лаб. 3) больше не нужен. Файл `db.json` остался в репозитории как исходные данные — его копия лежит в `agromarket-server/data/`.
+
+## Лабораторная 5 — что изменилось в React
+
+- `App.jsx`: адрес запросов сменился с `http://localhost:3001/products` (json-server) на `http://localhost:3000/api/products` (Express).
+- `ContactForm.jsx`: вместо `alert` форма отправляет данные на `POST /api/orders`. Обрабатываются ответы `201` (заявка принята), `400` (ошибка валидации от сервера) и недоступность сервера. Пока идёт запрос, кнопка блокируется и показывает «Отправка…».
+- Поле «Объём заказа» переименовано с `volume` в `quantity` — под это имя настроена валидация на сервере.
 
 ## Лабораторная 4 — вёрстка
 
